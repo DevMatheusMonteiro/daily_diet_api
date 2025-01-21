@@ -4,6 +4,7 @@ class UserRepository:
     def create_user(user:User):
         db.session.add(user)
         db.session.commit()
+        return user.id
     @staticmethod
     def get_user_by_id(user_id:int):
         return User.query.get(user_id)
@@ -16,7 +17,7 @@ class UserRepository:
     @staticmethod
     def update_user(user:User):
         db.session.commit()
-        return user
+        return user.id
     @staticmethod
     def delete_user(user_id:int):
         user = User.query.get(user_id)
@@ -24,4 +25,4 @@ class UserRepository:
             return None
         db.session.delete(user)
         db.session.commit()
-        return user
+        return user.id

@@ -11,5 +11,3 @@ class AuthController:
     def logout():
         AuthService.logout()
         return AppResponse(message="Logout realizado com sucesso.")
-        
-            

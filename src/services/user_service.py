@@ -64,3 +64,10 @@ class UserService:
                 raise AppError("Senha atual inválida.")
             user.password = bcrypt.hashpw(str.encode(new_password), bcrypt.gensalt()).decode()
         UserRepository.update_user(user)
+    @staticmethod
+    def delete_user(user_id:int):
+        user = UserRepository.get_user_by_id(user_id)
+        if not user:
+            raise AppError("Usuário não encontrado.", 404)
+        UserRepository.delete_user(user_id)
+        return user.id
