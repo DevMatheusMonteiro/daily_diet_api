@@ -1,4 +1,5 @@
 from models.user import User, db
+from sqlalchemy import and_
 class UserRepository:
     @staticmethod
     def create_user(user:User):

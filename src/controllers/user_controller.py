@@ -21,7 +21,7 @@ class UserController:
         return AppResponse(body={"user": user_dto_output.model_dump()})
     @staticmethod
     def get_user_by_email():
-        data = request.json
+        data = request.args
         email = data.get("email")
         user = UserService.get_user_by_email(email)
         user_dto_output = UserDTOOutput()
@@ -29,7 +29,7 @@ class UserController:
         return AppResponse(body={"user": user_dto_output.model_dump()})
     @staticmethod
     def get_user_by_username():
-        data = request.json
+        data = request.args
         username = data.get("username")
         user = UserService.get_user_by_username(username)
         user_dto_output = UserDTOOutput()
