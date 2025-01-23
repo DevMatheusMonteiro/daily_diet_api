@@ -1,4 +1,5 @@
 from repositories.user_repository import UserRepository, User
+from flask_login import current_user
 from dto.input.user_dto_input import UserDTOInput
 from utils.app_error import AppError
 import bcrypt
@@ -41,7 +42,7 @@ class UserService:
     @staticmethod
     def update_user(user_dto_input:UserDTOInput, current_password:str=None):
         user = UserRepository.get_user_by_id(user_dto_input.id)
-        if not user:
+        if not user or user.id != current_user.id:
             raise AppError("Usuário não encontrado.", 404)
         email = user_dto_input.email
         username = user_dto_input.username
@@ -49,20 +50,20 @@ class UserService:
         new_password = user_dto_input.password
         if email and email.strip() != "":
             user_by_email = UserRepository.get_user_by_email(email)
-            if user_by_email and user_dto_input.id != user.id:
+            if user_by_email and user_dto_input.id != user_by_email.id:
                 raise AppError("Email já cadastrado.")
-            user.email = email
         if username and username.strip() != "":
             user_by_username = UserRepository.get_user_by_username(username)
-            if user_by_username:
-                raise AppError("Usuário já cadastrado.")
-            user.username = username
+            if user_by_username and user_dto_input.id != current_user.id:
+                raise AppError("Nome de usuário já cadastrado.")
         if new_password and new_password.strip() != "":
             if not current_password or not current_password.strip():
                 raise AppError("Informe a senha atual.")
             if not bcrypt.checkpw(str.encode(current_password), str.encode(user.password)):
                 raise AppError("Senha atual inválida.")
             user.password = bcrypt.hashpw(str.encode(new_password), bcrypt.gensalt()).decode()
+        user.email = email or user.email
+        user.username = username or user.username
         UserRepository.update_user(user)
     @staticmethod
     def delete_user(user_id:int):
