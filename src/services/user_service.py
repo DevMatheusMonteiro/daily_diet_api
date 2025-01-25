@@ -19,8 +19,8 @@ class UserService:
             raise AppError("Nome de usuário já cadastrado.")
         hashed_password = bcrypt.hashpw(str.encode(password), bcrypt.gensalt()).decode()
         new_user = User(email=email, username=username, password=hashed_password)
-        UserRepository.create_user(new_user)
-        return new_user.id
+        created_user_id = UserRepository.create_user(new_user)
+        return created_user_id
     @staticmethod
     def get_user_by_id(user_id:int):
         user = UserRepository.get_user_by_id(user_id)
@@ -64,5 +64,5 @@ class UserService:
         user = UserRepository.get_user_by_id(user_id)
         if not user:
             raise AppError("Usuário não encontrado.", 404)
-        UserRepository.delete_user(user_id)
+        UserRepository.delete_user(user)
         return user.id

@@ -6,3 +6,5 @@ pymysql==1.1.0
 cryptography==41.0.7
 bcrypt==4.1.2
 pydantic==2.10.4
+tzlocal==5.2
+pytz==2024.2

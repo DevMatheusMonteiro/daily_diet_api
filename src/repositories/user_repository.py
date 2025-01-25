@@ -29,10 +29,7 @@ class UserRepository:
         db.session.commit()
         return user.id
     @staticmethod
-    def delete_user(user_id:int):
-        user = User.query.get(user_id)
-        if not user:
-            return None
+    def delete_user(user: User):
         db.session.delete(user)
         db.session.commit()
         return user.id
