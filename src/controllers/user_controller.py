@@ -3,12 +3,10 @@ from dto.input.user_dto_input import UserDTOInput
 from dto.output.user_dto_output import UserDTOOutput
 from utils.app_response import AppResponse
 from flask import request
-from flask_login import current_user
 class UserController:
     @staticmethod
     def create_user():
         data = request.json
-        # data = {"email": "matheus@email.com", "username": "matheus", "password":"123"}
         user_dto_input = UserDTOInput()
         user_dto_input.map_object(data)
         created_user_id = UserService.create_user(user_dto_input)
@@ -20,21 +18,12 @@ class UserController:
         user_dto_output.map_object(user.to_dict())
         return AppResponse(body={"user": user_dto_output.model_dump()})
     @staticmethod
-    def get_user_by_email():
+    def search_users():
         data = request.args
-        email = data.get("email")
-        user = UserService.get_user_by_email(email)
+        search = data.get("search")
+        users = UserService.search_users(search)
         user_dto_output = UserDTOOutput()
-        user_dto_output.map_object(user.to_dict())
-        return AppResponse(body={"user": user_dto_output.model_dump()})
-    @staticmethod
-    def get_user_by_username():
-        data = request.args
-        username = data.get("username")
-        user = UserService.get_user_by_username(username)
-        user_dto_output = UserDTOOutput()
-        user_dto_output.map_object(user.to_dict())
-        return AppResponse(body={"user": user_dto_output.model_dump()})
+        return AppResponse(body={"users": [user_dto_output.map_object(user.to_dict()).model_dump() for user in users]})
     @staticmethod
     def update_user(id:int):
         data = request.json

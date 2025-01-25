@@ -7,3 +7,4 @@ class UserDTOOutput(BaseModel):
     def map_object(self, data:dict):
         for key in self.model_dump().keys():
             setattr(self,key,data.get(key))
+        return self

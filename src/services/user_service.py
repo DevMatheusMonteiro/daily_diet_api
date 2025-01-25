@@ -28,17 +28,11 @@ class UserService:
             raise AppError("Usuário não encontrado.", 404)
         return user
     @staticmethod
-    def get_user_by_email(email:str):
-        user = UserRepository.get_user_by_email(email)
-        if not user:
-            raise AppError("Usuário não encontrado.", 404)
-        return user
-    @staticmethod
-    def get_user_by_username(username):
-        user = UserRepository.get_user_by_username(username)
-        if not user:
-            raise AppError("Usuário não encontrado.", 404)
-        return user
+    def search_users(search):
+        users = UserRepository.search_users(search)
+        if not users:
+            raise AppError("Nenhum usuário encontrado.", 404)
+        return users
     @staticmethod
     def update_user(user_dto_input:UserDTOInput, current_password:str=None):
         user = UserRepository.get_user_by_id(user_dto_input.id)
