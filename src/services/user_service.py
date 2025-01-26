@@ -1,5 +1,4 @@
 from repositories.user_repository import UserRepository, User
-from flask_login import current_user
 from dto.input.user_dto_input import UserDTOInput
 from utils.app_error import AppError
 import bcrypt
@@ -34,9 +33,9 @@ class UserService:
             raise AppError("Nenhum usuário encontrado.", 404)
         return users
     @staticmethod
-    def update_user(user_dto_input:UserDTOInput, current_password:str=None):
+    def update_user(user_dto_input:UserDTOInput, current_user_id:int, current_password:str=None):
         user = UserRepository.get_user_by_id(user_dto_input.id)
-        if not user or user.id != current_user.id:
+        if not user or user.id != current_user_id:
             raise AppError("Usuário não encontrado.", 404)
         email = user_dto_input.email
         username = user_dto_input.username
@@ -48,7 +47,7 @@ class UserService:
                 raise AppError("Email já cadastrado.")
         if username and username.strip() != "":
             user_by_username = UserRepository.get_user_by_username(username)
-            if user_by_username and user_dto_input.id != current_user.id:
+            if user_by_username and user_dto_input.id != user_by_username.id:
                 raise AppError("Nome de usuário já cadastrado.")
         if new_password and new_password.strip() != "":
             if not current_password or not current_password.strip():

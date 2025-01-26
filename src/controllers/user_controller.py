@@ -3,6 +3,7 @@ from dto.input.user_dto_input import UserDTOInput
 from dto.output.user_dto_output import UserDTOOutput
 from utils.app_response import AppResponse
 from flask import request
+from flask_login import current_user
 class UserController:
     @staticmethod
     def create_user():
@@ -30,7 +31,7 @@ class UserController:
         user_dto_input = UserDTOInput()
         user_dto_input.map_object(data)
         user_dto_input.id = id
-        UserService.update_user(user_dto_input, data.get("current_password"))
+        UserService.update_user(user_dto_input, current_user.id, data.get("current_password"))
         return AppResponse(message="Usuário atualizado com sucesso.")
     @staticmethod
     def delete_user(id:int):
